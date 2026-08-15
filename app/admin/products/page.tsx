@@ -56,10 +56,13 @@ export default function AdminProductsPage() {
             </p>
           </div>
 
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2">
-            <Plus size={20} />
-            Thêm sản phẩm
-          </button>
+          <Link
+  href="/admin/products/new"
+  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2"
+>
+  <Plus size={20} />
+  Thêm sản phẩm
+</Link>
         </div>
 
         {products.length === 0 ? (
