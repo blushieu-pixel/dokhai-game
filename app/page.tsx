@@ -1,5 +1,5 @@
 "use client";
-
+import { db } from "@/lib/firebase";
 import { useState } from "react";
 import ProductGrid from "@/components/ProductGrid";
 import FlashSale from "@/components/FlashSale";
