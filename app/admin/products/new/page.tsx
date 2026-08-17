@@ -2,12 +2,39 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image"
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-
+const imageOptions = [
+  {
+    label: "Golden Dragon",
+    value: "/pets/golden-dragon.jpg",
+    category: "Pet",
+  },
+  {
+    label: "Candy Blossom",
+    value: "/seeds/candy-blossom.jpg",
+    category: "Seed",
+  },
+  {
+    label: "Brainrot Crate",
+    value: "/items/brainrot-crate.jpg",
+    category: "Item",
+  },
+  {
+    label: "Grow a Garden",
+    value: "/games/grow-a-garden.jpg",
+    category: "Game",
+  },
+  {
+    label: "Steal a Brainrot",
+    value: "/games/steal-brainrot.jpg",
+    category: "Game",
+  },
+];
 export default function NewProductPage() {
   const router = useRouter();
 
@@ -180,19 +207,61 @@ export default function NewProductPage() {
             </div>
 
             <div>
-              <label className="font-semibold block mb-2">
-                Đường dẫn ảnh
-              </label>
+  <label className="font-semibold block mb-3">
+    Chọn ảnh sản phẩm
+  </label>
 
-              <input
-                value={form.image}
-                onChange={(e) =>
-                  setForm({ ...form, image: e.target.value })
-                }
-                className="w-full border rounded-2xl px-4 py-3"
-                placeholder="/games/grow-a-garden.jpg"
-              />
-            </div>
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+    {imageOptions.map((img) => (
+      <button
+        type="button"
+        key={img.value}
+        onClick={() =>
+          setForm({ ...form, image: img.value })
+        }
+        className={`rounded-2xl overflow-hidden border-2 transition ${
+          form.image === img.value
+            ? "border-blue-500 shadow-lg"
+            : "border-slate-200 hover:border-blue-300"
+        }`}
+      >
+        <div className="relative aspect-square">
+          <Image
+            src={img.value}
+            alt={img.label}
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        <div className="p-3 bg-white text-left">
+          <div className="font-bold text-sm">
+            {img.label}
+          </div>
+
+          <div className="text-xs text-slate-500">
+            {img.category}
+          </div>
+        </div>
+      </button>
+    ))}
+  </div>
+
+  <div className="mt-5 bg-slate-50 rounded-2xl p-4">
+    <p className="text-sm text-slate-500 mb-3">
+      Ảnh đã chọn
+    </p>
+
+    <div className="relative w-40 h-40 rounded-2xl overflow-hidden border">
+      <Image
+        src={form.image}
+        alt="Preview"
+        fill
+        className="object-cover"
+      />
+    </div>
+  </div>
+</div>
 
             <button
               disabled={loading}

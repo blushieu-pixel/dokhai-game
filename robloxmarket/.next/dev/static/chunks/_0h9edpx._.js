@@ -745,12 +745,14 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$flame$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Flame$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/flame.mjs [app-client] (ecmascript) <export default as Flame>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/star.mjs [app-client] (ecmascript) <export default as Star>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$useProducts$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/hooks/useProducts.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 ;
@@ -765,23 +767,6 @@ function ProductGrid() {
         if (filter === "brainrot") return item.game === "Steal a Brainrot";
         return true;
     });
-    if (!products.length) {
-        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
-            className: "max-w-7xl mx-auto px-4 py-12 text-center",
-            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                className: "text-slate-500 animate-pulse font-semibold",
-                children: "Đang tải sản phẩm..."
-            }, void 0, false, {
-                fileName: "[project]/components/ProductGrid.tsx",
-                lineNumber: 22,
-                columnNumber: 9
-            }, this)
-        }, void 0, false, {
-            fileName: "[project]/components/ProductGrid.tsx",
-            lineNumber: 21,
-            columnNumber: 7
-        }, this);
-    }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
         className: "max-w-7xl mx-auto px-4 py-12",
         children: [
@@ -795,7 +780,7 @@ function ProductGrid() {
                                 children: "Sản phẩm nổi bật"
                             }, void 0, false, {
                                 fileName: "[project]/components/ProductGrid.tsx",
-                                lineNumber: 33,
+                                lineNumber: 24,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -803,13 +788,13 @@ function ProductGrid() {
                                 children: "Chọn nhanh vật phẩm được mua nhiều nhất."
                             }, void 0, false, {
                                 fileName: "[project]/components/ProductGrid.tsx",
-                                lineNumber: 37,
+                                lineNumber: 28,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ProductGrid.tsx",
-                        lineNumber: 32,
+                        lineNumber: 23,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -821,7 +806,7 @@ function ProductGrid() {
                                 children: "Tất cả"
                             }, void 0, false, {
                                 fileName: "[project]/components/ProductGrid.tsx",
-                                lineNumber: 43,
+                                lineNumber: 35,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -830,7 +815,7 @@ function ProductGrid() {
                                 children: "Grow a Garden"
                             }, void 0, false, {
                                 fileName: "[project]/components/ProductGrid.tsx",
-                                lineNumber: 54,
+                                lineNumber: 46,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -839,19 +824,19 @@ function ProductGrid() {
                                 children: "Brainrot"
                             }, void 0, false, {
                                 fileName: "[project]/components/ProductGrid.tsx",
-                                lineNumber: 65,
+                                lineNumber: 57,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/ProductGrid.tsx",
-                        lineNumber: 42,
+                        lineNumber: 34,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ProductGrid.tsx",
-                lineNumber: 31,
+                lineNumber: 22,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -869,21 +854,21 @@ function ProductGrid() {
                                         className: "object-cover group-hover:scale-105 transition duration-500"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductGrid.tsx",
-                                        lineNumber: 85,
+                                        lineNumber: 77,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         className: "absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold",
-                                        children: item.rarity
+                                        children: item.rarity || "HOT"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductGrid.tsx",
-                                        lineNumber: 92,
+                                        lineNumber: 84,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ProductGrid.tsx",
-                                lineNumber: 84,
+                                lineNumber: 76,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -894,7 +879,7 @@ function ProductGrid() {
                                         children: item.game
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductGrid.tsx",
-                                        lineNumber: 98,
+                                        lineNumber: 90,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -902,7 +887,7 @@ function ProductGrid() {
                                         children: item.name
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductGrid.tsx",
-                                        lineNumber: 102,
+                                        lineNumber: 94,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -913,21 +898,21 @@ function ProductGrid() {
                                                 className: "text-orange-500"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ProductGrid.tsx",
-                                                lineNumber: 105,
+                                                lineNumber: 99,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 className: "text-sm text-slate-500",
-                                                children: "Bán chạy"
+                                                children: item.category
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ProductGrid.tsx",
-                                                lineNumber: 107,
+                                                lineNumber: 101,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/ProductGrid.tsx",
-                                        lineNumber: 104,
+                                        lineNumber: 98,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -943,69 +928,78 @@ function ProductGrid() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/ProductGrid.tsx",
-                                                        lineNumber: 112,
+                                                        lineNumber: 108,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "text-sm text-slate-400 line-through",
+                                                        className: "text-sm text-slate-400",
                                                         children: [
-                                                            Math.round(Number(item.price) * 1.25).toLocaleString("vi-VN"),
-                                                            "đ"
+                                                            "Còn ",
+                                                            item.stock,
+                                                            " sản phẩm"
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/ProductGrid.tsx",
-                                                        lineNumber: 116,
+                                                        lineNumber: 112,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/ProductGrid.tsx",
-                                                lineNumber: 111,
+                                                lineNumber: 107,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__["Star"], {
                                                 className: "text-yellow-500 fill-yellow-400"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ProductGrid.tsx",
-                                                lineNumber: 124,
+                                                lineNumber: 117,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/ProductGrid.tsx",
-                                        lineNumber: 110,
+                                        lineNumber: 106,
                                         columnNumber: 15
                                     }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                         href: `/product/${item.id}`,
                                         className: "block w-full mt-5 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl font-bold transition text-center",
                                         children: "Mua ngay"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ProductGrid.tsx",
-                                        lineNumber: 127,
+                                        lineNumber: 120,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ProductGrid.tsx",
-                                lineNumber: 97,
+                                lineNumber: 89,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, item.id, true, {
                         fileName: "[project]/components/ProductGrid.tsx",
-                        lineNumber: 80,
+                        lineNumber: 72,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/components/ProductGrid.tsx",
-                lineNumber: 78,
+                lineNumber: 70,
                 columnNumber: 7
+            }, this),
+            filteredProducts.length === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "text-center py-16 text-slate-500",
+                children: "Chưa có sản phẩm nào trong danh mục này."
+            }, void 0, false, {
+                fileName: "[project]/components/ProductGrid.tsx",
+                lineNumber: 132,
+                columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/ProductGrid.tsx",
-        lineNumber: 30,
+        lineNumber: 21,
         columnNumber: 5
     }, this);
 }

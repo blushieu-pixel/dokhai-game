@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Flame, Star } from "lucide-react";
 import useProducts from "@/hooks/useProducts";
 
@@ -16,16 +17,6 @@ export default function ProductGrid() {
     return true;
   });
 
-  if (!products.length) {
-    return (
-      <section className="max-w-7xl mx-auto px-4 py-12 text-center">
-        <p className="text-slate-500 animate-pulse font-semibold">
-          Đang tải sản phẩm...
-        </p>
-      </section>
-    );
-  }
-
   return (
     <section className="max-w-7xl mx-auto px-4 py-12">
       <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
@@ -39,6 +30,7 @@ export default function ProductGrid() {
           </p>
         </div>
 
+        {/* Bộ lọc */}
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setFilter("all")}
@@ -90,7 +82,7 @@ export default function ProductGrid() {
               />
 
               <span className="absolute top-3 left-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                {item.rarity}
+                {item.rarity || "HOT"}
               </span>
             </div>
 
@@ -99,12 +91,16 @@ export default function ProductGrid() {
                 {item.game}
               </div>
 
-              <h3 className="font-black text-xl mt-2">{item.name}</h3>
+              <h3 className="font-black text-xl mt-2">
+                {item.name}
+              </h3>
 
               <div className="flex items-center gap-2 mt-3">
                 <Flame size={16} className="text-orange-500" />
 
-                <span className="text-sm text-slate-500">Bán chạy</span>
+                <span className="text-sm text-slate-500">
+                  {item.category}
+                </span>
               </div>
 
               <div className="flex justify-between items-center mt-5">
@@ -113,27 +109,30 @@ export default function ProductGrid() {
                     {Number(item.price).toLocaleString("vi-VN")}đ
                   </div>
 
-                  <div className="text-sm text-slate-400 line-through">
-                    {Math.round(Number(item.price) * 1.25).toLocaleString(
-                      "vi-VN"
-                    )}
-                    đ
+                  <div className="text-sm text-slate-400">
+                    Còn {item.stock} sản phẩm
                   </div>
                 </div>
 
                 <Star className="text-yellow-500 fill-yellow-400" />
               </div>
 
-              <a
+              <Link
                 href={`/product/${item.id}`}
                 className="block w-full mt-5 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-2xl font-bold transition text-center"
               >
                 Mua ngay
-              </a>
+              </Link>
             </div>
           </div>
         ))}
       </div>
+
+      {filteredProducts.length === 0 && (
+        <div className="text-center py-16 text-slate-500">
+          Chưa có sản phẩm nào trong danh mục này.
+        </div>
+      )}
     </section>
   );
 }

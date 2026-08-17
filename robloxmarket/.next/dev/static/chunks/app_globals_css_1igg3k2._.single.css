@@ -595,12 +595,24 @@
     height: calc(var(--spacing) * 5);
   }
 
+  .h-9 {
+    height: calc(var(--spacing) * 9);
+  }
+
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
 
   .h-14 {
     height: calc(var(--spacing) * 14);
+  }
+
+  .h-28 {
+    height: calc(var(--spacing) * 28);
+  }
+
+  .h-40 {
+    height: calc(var(--spacing) * 40);
   }
 
   .h-52 {
@@ -627,6 +639,14 @@
     height: 320px;
   }
 
+  .h-\[420px\] {
+    height: 420px;
+  }
+
+  .h-fit {
+    height: fit-content;
+  }
+
   .h-full {
     height: 100%;
   }
@@ -639,12 +659,24 @@
     width: calc(var(--spacing) * 5);
   }
 
+  .w-9 {
+    width: calc(var(--spacing) * 9);
+  }
+
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
 
   .w-14 {
     width: calc(var(--spacing) * 14);
+  }
+
+  .w-28 {
+    width: calc(var(--spacing) * 28);
+  }
+
+  .w-40 {
+    width: calc(var(--spacing) * 40);
   }
 
   .w-52 {
@@ -760,6 +792,12 @@
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
     margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
+  }
+
+  :where(.space-y-4 > :not(:last-child)) {
+    --tw-space-y-reverse: 0;
+    margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
+    margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
   }
 
   :where(.space-y-5 > :not(:last-child)) {
@@ -1029,6 +1067,10 @@
     padding: calc(var(--spacing) * 2);
   }
 
+  .p-3 {
+    padding: calc(var(--spacing) * 3);
+  }
+
   .p-4 {
     padding: calc(var(--spacing) * 4);
   }
@@ -1095,6 +1137,10 @@
 
   .py-12 {
     padding-block: calc(var(--spacing) * 12);
+  }
+
+  .py-16 {
+    padding-block: calc(var(--spacing) * 16);
   }
 
   .py-20 {
@@ -1212,6 +1258,10 @@
 
   .text-purple-500 {
     color: var(--color-purple-500);
+  }
+
+  .text-red-500 {
+    color: var(--color-red-500);
   }
 
   .text-red-600 {
@@ -1369,6 +1419,10 @@
       scale: 1.02;
     }
 
+    .hover\:border-blue-300:hover {
+      border-color: var(--color-blue-300);
+    }
+
     .hover\:bg-blue-50:hover {
       background-color: var(--color-blue-50);
     }
@@ -1481,8 +1535,16 @@
   }
 
   @media (min-width: 64rem) {
+    .lg\:col-span-2 {
+      grid-column: span 2 / span 2;
+    }
+
     .lg\:flex {
       display: flex;
+    }
+
+    .lg\:grid-cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .lg\:grid-cols-4 {
