@@ -120,9 +120,12 @@ export default function CartPage() {
                 </span>
               </div>
 
-              <button className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold">
-                Thanh toán
-              </button>
+             <Link
+  href="/checkout"
+  className="block w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold text-center transition"
+>
+  Thanh toán
+</Link>
 
             </div>
 

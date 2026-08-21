@@ -7,7 +7,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import useCart from "@/hooks/useCart";
 interface Product {
   id: string;
   name: string;
@@ -23,8 +24,10 @@ export default function ProductPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const router = useRouter();
+const { addItem } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
-
+const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function load() {
       const { id } = await params;
@@ -36,19 +39,53 @@ export default function ProductPage({
           ...(snap.data() as Omit<Product, "id">),
         });
       }
+      setLoading(false);
     }
 
     load();
   }, [params]);
+function handleAddToCart() {
+  if (!product) return;
 
-  if (!product) {
-    return (
-      <div className="py-20 text-center text-slate-500 animate-pulse">
-        Đang tải sản phẩm...
-      </div>
-    );
+  const STORAGE_KEY = "dokhai-cart";
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  const cart = saved ? JSON.parse(saved) : [];
+
+  const exist = cart.find((item: any) => item.id === product.id);
+
+  if (exist) {
+    exist.quantity += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      image: product.image,
+      game: product.game,
+      price: Number(product.price),
+      quantity: 1,
+    });
   }
 
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+
+  router.push("/cart");
+}
+  if (loading) {
+  return (
+    <main className="min-h-screen flex items-center justify-center">
+      <p className="text-slate-500 text-lg">Đang tải sản phẩm...</p>
+    </main>
+  );
+}
+
+if (!product) {
+  return (
+    <main className="min-h-screen flex items-center justify-center">
+      Không tìm thấy sản phẩm.
+    </main>
+  );
+}
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
       <Link
@@ -88,9 +125,12 @@ export default function ProductPage({
             {Number(product.price).toLocaleString("vi-VN")}đ
           </div>
 
-          <button className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl text-lg font-bold transition">
-            Mua ngay
-          </button>
+          <button
+  onClick={handleAddToCart}
+  className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl text-lg font-bold transition"
+>
+  Thêm vào giỏ
+</button>
 
           <div className="mt-6 bg-blue-50 rounded-2xl p-5">
             <h3 className="font-bold mb-2">Cam kết DoKhai Game</h3>
