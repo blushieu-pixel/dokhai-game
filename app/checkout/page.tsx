@@ -38,7 +38,7 @@ export default function CheckoutPage() {
         createdAt: serverTimestamp(),
       });
 
-      router.push("/checkout/success");
+     router.push("/checkout/payment");
     } catch (err) {
       console.error(err);
       alert("Có lỗi khi tạo đơn.");
