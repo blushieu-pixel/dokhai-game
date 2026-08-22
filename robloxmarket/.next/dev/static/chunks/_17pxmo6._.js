@@ -52,7 +52,7 @@ function Navbar() {
                             className: "relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-blue-400 shadow-lg shadow-blue-300/40",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 src: "/logo.png",
-                                alt: "DoKhai Game",
+                                alt: "DoKhai's Shop",
                                 fill: true,
                                 className: "object-cover"
                             }, void 0, false, {
@@ -71,14 +71,14 @@ function Navbar() {
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                                     className: "font-bold text-xl text-slate-900",
                                     children: [
-                                        "DoKhai ",
+                                        "DoKhai's ",
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                             className: "text-blue-600",
-                                            children: "Game"
+                                            children: "Shop"
                                         }, void 0, false, {
                                             fileName: "[project]/components/Navbar.tsx",
                                             lineNumber: 35,
-                                            columnNumber: 22
+                                            columnNumber: 24
                                         }, this)
                                     ]
                                 }, void 0, true, {
