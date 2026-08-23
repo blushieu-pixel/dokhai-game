@@ -93,6 +93,7 @@
     --color-slate-50: #f8fafc;
     --color-slate-100: #f1f5f9;
     --color-slate-200: #e2e8f0;
+    --color-slate-300: #cad5e2;
     --color-slate-400: #90a1b9;
     --color-slate-500: #62748e;
     --color-slate-600: #45556c;
@@ -170,6 +171,7 @@
       --color-slate-50: lab(98.1434% -.369549 -1.05968);
       --color-slate-100: lab(96.286% -.852466 -2.46847);
       --color-slate-200: lab(91.7353% -.998765 -4.76968);
+      --color-slate-300: lab(84.7652% -1.94535 -7.93337);
       --color-slate-400: lab(65.5349% -2.25151 -14.5072);
       --color-slate-500: lab(48.0876% -2.03595 -16.5814);
       --color-slate-600: lab(35.5623% -1.74978 -15.4316);
@@ -476,6 +478,10 @@
     top: calc(var(--spacing) * 4);
   }
 
+  .top-5 {
+    top: calc(var(--spacing) * 5);
+  }
+
   .-right-1 {
     right: calc(var(--spacing) * -1);
   }
@@ -502,6 +508,10 @@
 
   .left-4 {
     left: calc(var(--spacing) * 4);
+  }
+
+  .z-10 {
+    z-index: 10;
   }
 
   .z-50 {
@@ -608,12 +618,20 @@
     aspect-ratio: 1;
   }
 
+  .h-1 {
+    height: var(--spacing);
+  }
+
   .h-5 {
     height: calc(var(--spacing) * 5);
   }
 
   .h-9 {
     height: calc(var(--spacing) * 9);
+  }
+
+  .h-10 {
+    height: calc(var(--spacing) * 10);
   }
 
   .h-12 {
@@ -680,12 +698,20 @@
     width: calc(var(--spacing) * 9);
   }
 
+  .w-10 {
+    width: calc(var(--spacing) * 10);
+  }
+
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
 
   .w-14 {
     width: calc(var(--spacing) * 14);
+  }
+
+  .w-24 {
+    width: calc(var(--spacing) * 24);
   }
 
   .w-28 {
@@ -891,6 +917,10 @@
     border-color: var(--color-slate-200);
   }
 
+  .border-slate-300 {
+    border-color: var(--color-slate-300);
+  }
+
   .bg-blue-50 {
     background-color: var(--color-blue-50);
   }
@@ -971,6 +1001,10 @@
 
   .bg-slate-100 {
     background-color: var(--color-slate-100);
+  }
+
+  .bg-slate-200 {
+    background-color: var(--color-slate-200);
   }
 
   .bg-white {
@@ -1415,6 +1449,12 @@
 
   .transition {
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+
+  .transition-all {
+    transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
