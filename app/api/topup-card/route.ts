@@ -1,7 +1,8 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 
-// Nhập Partner ID và Partner Key lấy từ gachthefast.com vào đây
 const PARTNER_ID = "PASTE_PARTNER_ID_HERE";
 const PARTNER_KEY = "PASTE_PARTNER_KEY_HERE";
 
@@ -18,7 +19,6 @@ export async function POST(request: Request) {
 
     const requestId = `${uid}_${Date.now()}`;
 
-    // Tạo mã bảo mật MD5 theo quy chuẩn gachthefast
     const sign = crypto
       .createHash("md5")
       .update(PARTNER_KEY + code + serial)

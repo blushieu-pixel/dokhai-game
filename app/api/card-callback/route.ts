@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import { doc, updateDoc, increment, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -8,17 +10,14 @@ async function handleCallback(data: any) {
 
   if (!uid) return;
 
-  // Status 1: Thẻ đúng, gạch thành công
   if (Number(status) === 1) {
     const realAmount = Number(amount || value);
 
-    // 1. Cộng tiền vào Ví DoKhai trong Firestore
     const userRef = doc(db, "users", uid);
     await updateDoc(userRef, {
       wallet: increment(realAmount),
     });
 
-    // 2. Ghi nhận lịch sử giao dịch
     await addDoc(collection(db, "walletTransactions"), {
       uid: uid,
       amount: realAmount,
