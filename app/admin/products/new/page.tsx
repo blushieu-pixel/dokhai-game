@@ -1,6 +1,6 @@
 
 "use client";
-
+import AdminGuard from "@/components/AdminGuard";
 import { useState } from "react";
 import Image from "next/image"
 import { useRouter } from "next/navigation";
@@ -77,8 +77,9 @@ export default function NewProductPage() {
     setLoading(false);
   }
 
-  return (
-    <main className="min-h-screen bg-slate-50">
+ return (
+  <AdminGuard>
+    <main>
       <div className="max-w-3xl mx-auto px-4 py-10">
         <Link
           href="/admin/products"
@@ -272,6 +273,7 @@ export default function NewProductPage() {
           </form>
         </div>
       </div>
-    </main>
-  );
+       </main>
+  </AdminGuard>
+);
 }

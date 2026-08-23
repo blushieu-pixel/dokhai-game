@@ -20,8 +20,8 @@ export default function Hero() {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-black text-slate-900 mt-6 leading-tight">
-              DoKhai
-              <span className="text-blue-600"> Game</span>
+              DoKhai's
+              <span className="text-blue-600"> Shop</span>
             </h1>
 
             <p className="mt-5 text-lg text-slate-600 max-w-xl">

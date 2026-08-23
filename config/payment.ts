@@ -1,5 +1,5 @@
 export const PAYMENT = {
   bankCode: "MB",        
-  accountNumber: "121230042007", 
-  accountName: "NGUYEN TRUNG HIEU",
+  accountNumber: "199918092007", 
+  accountName: "DO DINH KHAI",
 };

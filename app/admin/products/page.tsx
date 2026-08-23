@@ -6,7 +6,7 @@ import Link from "next/link";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { ArrowLeft, Plus, Package } from "lucide-react";
-
+import AdminGuard from "@/components/AdminGuard";
 interface Product {
   id: string;
   name: string;
@@ -34,8 +34,9 @@ export default function AdminProductsPage() {
     loadProducts();
   }, []);
 
-  return (
-    <main className="min-h-screen bg-slate-50">
+ return (
+  <AdminGuard>
+    <main>
       <div className="max-w-7xl mx-auto px-4 py-10">
         <Link
           href="/admin"
@@ -130,6 +131,7 @@ export default function AdminProductsPage() {
           </div>
         )}
       </div>
-    </main>
-  );
+        </main>
+  </AdminGuard>
+);
 }
