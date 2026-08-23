@@ -212,10 +212,10 @@ export default function TopupPage() {
             </h2>
             <div className="bg-slate-100 p-4 rounded-2xl inline-block">
               <img
-                src={`https://img.vietqr.io/image/MB-0388888888-compact2.png?amount=100000&addInfo=NAP%20${user.uid.slice(0, 6)}`}
-                alt="VietQR DoKhai"
-                className="w-64 h-64 object-contain mx-auto rounded-xl"
-              />
+  src={`https://img.vietqr.io/image/MB-199918092007-compact2.png?accountName=DO%20DINH%20KHAI&addInfo=NAP%20${user.uid.slice(0, 6)}`}
+  alt="VietQR DoKhai"
+  className="w-64 h-64 object-contain mx-auto rounded-xl"
+/>
             </div>
             <p className="text-sm text-slate-600">
               Nội dung chuyển khoản: <strong className="text-blue-600">NAP {user.uid.slice(0, 6)}</strong>

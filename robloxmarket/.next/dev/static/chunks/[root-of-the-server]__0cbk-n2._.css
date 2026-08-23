@@ -1441,6 +1441,10 @@
     padding-inline: var(--spacing);
   }
 
+  .px-2\.5 {
+    padding-inline: calc(var(--spacing) * 2.5);
+  }
+
   .px-3 {
     padding-inline: calc(var(--spacing) * 3);
   }
@@ -1873,6 +1877,14 @@
       background-color: var(--color-slate-800);
     }
 
+    .hover\:text-blue-600:hover {
+      color: var(--color-blue-600);
+    }
+
+    .hover\:text-red-600:hover {
+      color: var(--color-red-600);
+    }
+
     .hover\:text-red-700:hover {
       color: var(--color-red-700);
     }
@@ -1909,6 +1921,10 @@
   @media (min-width: 40rem) {
     .sm\:block {
       display: block;
+    }
+
+    .sm\:inline {
+      display: inline;
     }
 
     .sm\:grid-cols-2 {
