@@ -699,6 +699,10 @@
     z-index: 999999;
   }
 
+  .z-\[9999999\] {
+    z-index: 9999999;
+  }
+
   .mx-4 {
     margin-inline: calc(var(--spacing) * 4);
   }
@@ -1024,6 +1028,10 @@
     --tw-scale-y: 110%;
     --tw-scale-z: 110%;
     scale: var(--tw-scale-x) var(--tw-scale-y);
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
   }
 
   .touch-manipulation {
@@ -1939,6 +1947,11 @@
 
   .shadow-\[0_-4px_25px_rgba\(0\,0\,0\,0\.12\)\] {
     --tw-shadow: 0 -4px 25px var(--tw-shadow-color, #0000001f);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .shadow-\[0_-4px_25px_rgba\(0\,0\,0\,0\.15\)\] {
+    --tw-shadow: 0 -4px 25px var(--tw-shadow-color, #00000026);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
