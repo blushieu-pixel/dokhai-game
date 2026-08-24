@@ -1539,6 +1539,10 @@
     padding-bottom: calc(var(--spacing) * 6);
   }
 
+  .pb-24 {
+    padding-bottom: calc(var(--spacing) * 24);
+  }
+
   .text-center {
     text-align: center;
   }
@@ -2113,6 +2117,10 @@
 
     .md\:p-12 {
       padding: calc(var(--spacing) * 12);
+    }
+
+    .md\:pb-0 {
+      padding-bottom: 0;
     }
 
     .md\:text-4xl {
