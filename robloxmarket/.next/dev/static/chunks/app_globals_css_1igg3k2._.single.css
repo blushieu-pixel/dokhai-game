@@ -98,8 +98,10 @@
     --color-indigo-600: #4f39f6;
     --color-purple-500: #ac4bff;
     --color-pink-500: #f6339a;
+    --color-rose-50: #fff1f2;
     --color-rose-400: #ff667f;
     --color-rose-500: #ff2357;
+    --color-rose-600: #e70044;
     --color-slate-50: #f8fafc;
     --color-slate-100: #f1f5f9;
     --color-slate-200: #e2e8f0;
@@ -123,6 +125,8 @@
     --text-xs--line-height: calc(1 / .75);
     --text-sm: .875rem;
     --text-sm--line-height: calc(1.25 / .875);
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5 / 1);
     --text-lg: 1.125rem;
     --text-lg--line-height: calc(1.75 / 1.125);
     --text-xl: 1.25rem;
@@ -193,8 +197,10 @@
       --color-indigo-600: lab(38.4009% 52.6132 -92.3857);
       --color-purple-500: lab(52.0183% 66.11 -78.2316);
       --color-pink-500: lab(56.9303% 76.8162 -8.07021);
+      --color-rose-50: lab(96.2369% 4.94152 1.28012);
       --color-rose-400: lab(64.4124% 63.0291 19.2068);
       --color-rose-500: lab(56.101% 79.4329 31.4532);
+      --color-rose-600: lab(49.1882% 81.577 36.0311);
       --color-slate-50: lab(98.1434% -.369549 -1.05968);
       --color-slate-100: lab(96.286% -.852466 -2.46847);
       --color-slate-200: lab(91.7353% -.998765 -4.76968);
@@ -957,6 +963,10 @@
     gap: var(--spacing);
   }
 
+  .gap-1\.5 {
+    gap: calc(var(--spacing) * 1.5);
+  }
+
   .gap-2 {
     gap: calc(var(--spacing) * 2);
   }
@@ -1531,6 +1541,10 @@
     padding-block: calc(var(--spacing) * 2);
   }
 
+  .py-2\.5 {
+    padding-block: calc(var(--spacing) * 2.5);
+  }
+
   .py-3 {
     padding-block: calc(var(--spacing) * 3);
   }
@@ -1637,6 +1651,11 @@
   .text-5xl {
     font-size: var(--text-5xl);
     line-height: var(--tw-leading, var(--text-5xl--line-height));
+  }
+
+  .text-base {
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
   }
 
   .text-lg {
@@ -1770,6 +1789,14 @@
 
   .text-rose-400 {
     color: var(--color-rose-400);
+  }
+
+  .text-rose-500 {
+    color: var(--color-rose-500);
+  }
+
+  .text-rose-600 {
+    color: var(--color-rose-600);
   }
 
   .text-slate-100 {
@@ -2043,6 +2070,10 @@
       background-color: var(--color-red-200);
     }
 
+    .hover\:bg-rose-50:hover {
+      background-color: var(--color-rose-50);
+    }
+
     .hover\:bg-rose-500\/20:hover {
       background-color: #ff235733;
     }
@@ -2162,6 +2193,10 @@
   }
 
   @media (min-width: 40rem) {
+    .sm\:block {
+      display: block;
+    }
+
     .sm\:inline {
       display: inline;
     }
