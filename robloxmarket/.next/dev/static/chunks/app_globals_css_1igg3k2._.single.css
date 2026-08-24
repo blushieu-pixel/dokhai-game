@@ -1435,6 +1435,10 @@
     fill: var(--color-yellow-400);
   }
 
+  .stroke-\[2\.2\] {
+    stroke-width: 2.2px;
+  }
+
   .object-contain {
     object-fit: contain;
   }
@@ -1579,12 +1583,20 @@
     padding-bottom: calc(var(--spacing) * 6);
   }
 
+  .pb-20 {
+    padding-bottom: calc(var(--spacing) * 20);
+  }
+
   .pb-24 {
     padding-bottom: calc(var(--spacing) * 24);
   }
 
   .pb-\[calc\(0\.5rem\+env\(safe-area-inset-bottom\)\)\] {
     padding-bottom: calc(.5rem + env(safe-area-inset-bottom));
+  }
+
+  .pb-\[env\(safe-area-inset-bottom\)\] {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .pb-\[max\(0\.75rem\,env\(safe-area-inset-bottom\)\)\] {
