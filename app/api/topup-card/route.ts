@@ -3,8 +3,8 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 
-const PARTNER_ID = "3455488826";
-const PARTNER_KEY = "2849d77c0a7c5c4345bee1e216e9717c";
+const PARTNER_ID = "8832586655";
+const PARTNER_KEY = "72f315b7e96ac25badbb55e7b5772fbe";
 
 export async function POST(request: Request) {
   try {
