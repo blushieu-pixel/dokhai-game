@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export default function Navbar() {
-  const { user, userData, logout } = useAuth();
+  const { user, userData, logout, loginWithGoogle } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
@@ -29,6 +29,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-1.5">
           <span className="bg-blue-600 text-white font-black px-2.5 py-1 rounded-xl text-base">
             DoKhai
@@ -49,7 +50,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* User Info & Nút 3 sọc Mobile */}
+        {/* Nút đăng nhập / Thông tin Ví */}
         <div className="flex items-center gap-2">
           {user ? (
             <div className="flex items-center gap-2">
@@ -63,19 +64,21 @@ export default function Navbar() {
               <button
                 onClick={logout}
                 className="p-2 text-slate-400 hover:text-rose-500 rounded-lg hidden sm:block"
+                title="Đăng xuất"
               >
                 <LogOut className="w-5 h-5" />
               </button>
             </div>
           ) : (
-            <Link
-              href="/auth/login"
+            <button
+              onClick={loginWithGoogle}
               className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition"
             >
               Đăng nhập
-            </Link>
+            </button>
           )}
 
+          {/* Toggle Menu Mobile */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-xl transition"
@@ -85,7 +88,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Menu xổ xuống trên Mobile */}
+      {/* Menu xổ xuống Mobile */}
       {isOpen && (
         <div className="md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1 shadow-xl">
           {navLinks.map((link) => {
@@ -102,7 +105,8 @@ export default function Navbar() {
               </Link>
             );
           })}
-          {user && (
+
+          {user ? (
             <button
               onClick={() => {
                 setIsOpen(false);
@@ -112,6 +116,17 @@ export default function Navbar() {
             >
               <LogOut className="w-5 h-5 text-rose-500" />
               Đăng xuất
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                loginWithGoogle();
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-600 hover:bg-blue-50 transition"
+            >
+              <User className="w-5 h-5 text-blue-600" />
+              Đăng nhập Google
             </button>
           )}
         </div>
