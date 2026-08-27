@@ -1,113 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { doc, getDoc } from "firebase/firestore";
+import { useEffect, useState, use } from "react";
+import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
-import { ArrowLeft } from "lucide-react";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
-export default function ProductDetailPage() {
-  const { id } = useParams();
-
-  const [product, setProduct] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export default function EditProduct({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const router = useRouter();
+  const [form, setForm] = useState({ name: "", game: "", price: 0, tag: "" });
 
   useEffect(() => {
-    async function loadProduct() {
-      if (!id) return;
-
-      const ref = doc(db, "products", id as string);
-      const snap = await getDoc(ref);
-
-      if (snap.exists()) {
-        setProduct({
-          id: snap.id,
-          ...snap.data(),
-        });
-      }
-
-      setLoading(false);
-    }
-
-    loadProduct();
+    getDoc(doc(db, "products", id)).then((d) => d.exists() && setForm(d.data() as any));
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Đang tải...
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Không tìm thấy sản phẩm.
-      </div>
-    );
-  }
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await updateDoc(doc(db, "products", id), { ...form, price: Number(form.price) });
+    router.push("/admin/products");
+  };
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <div className="max-w-6xl mx-auto px-4 py-10">
-
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-blue-600 font-semibold mb-8"
-        >
-          <ArrowLeft size={18}/>
-          Quay lại
-        </Link>
-
-        <div className="grid md:grid-cols-2 gap-10 bg-white rounded-3xl shadow p-8">
-
-          <div className="relative h-[420px] rounded-3xl overflow-hidden">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              className="object-cover"
-            />
-          </div>
-
-          <div>
-
-            <div className="text-blue-600 font-bold">
-              {product.game}
-            </div>
-
-            <h1 className="text-4xl font-black mt-2">
-              {product.name}
-            </h1>
-
-            <p className="mt-4 text-slate-500">
-              Danh mục: {product.category}
-            </p>
-
-            <p className="text-slate-500">
-              Độ hiếm: {product.rarity}
-            </p>
-
-            <div className="text-4xl font-black text-blue-600 mt-8">
-              {Number(product.price).toLocaleString("vi-VN")}đ
-            </div>
-
-            <div className="mt-2 text-slate-500">
-              Kho còn: {product.stock}
-            </div>
-
-            <button className="w-full mt-8 bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold transition">
-              Mua ngay
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-    </main>
+    <form onSubmit={handleUpdate} className="max-w-2xl bg-white p-6 rounded-2xl border space-y-4 shadow-sm">
+      <h1 className="text-xl font-bold text-slate-800">Chỉnh Sửa Sản Phẩm</h1>
+      <input
+        className="w-full border p-3 rounded-xl text-sm outline-none"
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+      />
+      <input
+        className="w-full border p-3 rounded-xl text-sm outline-none"
+        type="number"
+        value={form.price}
+        onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+      />
+      <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700">
+        Cập Nhật
+      </button>
+    </form>
   );
 }
