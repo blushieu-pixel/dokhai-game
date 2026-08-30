@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useEffect, useState } from "react";
+import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { doc, onSnapshot } from "firebase/firestore";
 import {
   CreditCard,
   QrCode,
@@ -11,18 +13,21 @@ import {
   Copy,
   Check,
   ShieldCheck,
+  Wallet,
 } from "lucide-react";
 
 export default function TopupPage() {
-  const { user, loginWithGoogle } = useAuth();
+  const [user, setUser] = useState<any>(null);
+  const [balance, setBalance] = useState<number>(0);
   const [method, setMethod] = useState<"card" | "qr">("card");
+  const [loadingUser, setLoadingUser] = useState(true);
 
   // State nạp thẻ cào
   const [cardType, setCardType] = useState("VIETTEL");
   const [declaredAmount, setDeclaredAmount] = useState(50000);
   const [serial, setSerial] = useState("");
   const [code, setCode] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loadingCard, setLoadingCard] = useState(false);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -30,6 +35,38 @@ export default function TopupPage() {
 
   // State sao chép
   const [copiedText, setCopiedText] = useState<string | null>(null);
+
+  // Lắng nghe đăng nhập & số dư ví từ Firebase
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        const userUnsub = onSnapshot(doc(db, "users", currentUser.uid), (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setBalance(Number(data.wallet ?? data.balance ?? 0));
+          }
+        });
+        setLoadingUser(false);
+        return () => userUnsub();
+      } else {
+        setBalance(0);
+        setLoadingUser(false);
+      }
+    });
+
+    return () => unsubscribeAuth();
+  }, []);
+
+  const handleLoginGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      console.error("Lỗi đăng nhập Google:", err);
+      alert("Đăng nhập thất bại. Vui lòng thử lại!");
+    }
+  };
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -44,7 +81,7 @@ export default function TopupPage() {
       return;
     }
 
-    setLoading(true);
+    setLoadingCard(true);
     setMessage(null);
 
     try {
@@ -82,8 +119,16 @@ export default function TopupPage() {
         text: "Không thể kết nối đến cổng nạp thẻ. Vui lòng thử lại sau!",
       });
     } finally {
-      setLoading(false);
+      setLoadingCard(false);
     }
+  }
+
+  if (loadingUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center font-bold text-slate-500">
+        Đang tải thông tin nạp tiền...
+      </div>
+    );
   }
 
   if (!user) {
@@ -94,8 +139,8 @@ export default function TopupPage() {
           <h1 className="text-2xl font-black">Nạp tiền DoKhai Wallet</h1>
           <p className="text-slate-500 text-sm">Vui lòng đăng nhập để thực hiện nạp tiền.</p>
           <button
-            onClick={loginWithGoogle}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl transition"
+            onClick={handleLoginGoogle}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl transition shadow-md shadow-blue-500/20"
           >
             Đăng nhập bằng Google
           </button>
@@ -112,7 +157,20 @@ export default function TopupPage() {
       <div className="max-w-2xl mx-auto px-4 space-y-6">
         <h1 className="text-3xl font-black text-center text-slate-900">Nạp tiền DoKhai Wallet</h1>
 
-        {/* NÚT CHUYỂN TAB ĐỔI THẺ / VIETQR */}
+        {/* SỐ DƯ VÍ */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 text-white shadow-lg flex justify-between items-center">
+          <div className="space-y-1">
+            <span className="text-xs text-blue-200 font-semibold flex items-center gap-1.5">
+              <Wallet className="w-4 h-4" /> Số dư hiện tại
+            </span>
+            <h3 className="text-3xl font-black">{balance.toLocaleString("vi-VN")}đ</h3>
+          </div>
+          <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold">
+            {user.displayName || user.email?.split("@")[0] || "Thành viên"}
+          </span>
+        </div>
+
+        {/* CHUYỂN TAB THẺ CÀO / VIETQR */}
         <div className="grid grid-cols-2 gap-3 bg-slate-200 p-1.5 rounded-2xl">
           <button
             type="button"
@@ -134,7 +192,7 @@ export default function TopupPage() {
           </button>
         </div>
 
-        {/* TAB 1: NẠP THẺ CÀO TỰ ĐỘNG */}
+        {/* TAB 1: THẺ CÀO TỰ ĐỘNG */}
         {method === "card" && (
           <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 space-y-6">
             <h2 className="text-xl font-bold flex items-center gap-2 border-b border-slate-100 pb-4 text-slate-900">
@@ -219,10 +277,10 @@ export default function TopupPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loadingCard}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-2xl transition disabled:opacity-60 mt-2"
               >
-                {loading ? "Đang gửi thẻ lên cổng gạch..." : "Nạp Thẻ Ngay"}
+                {loadingCard ? "Đang gửi thẻ lên cổng gạch..." : "Nạp Thẻ Ngay"}
               </button>
             </form>
           </div>
