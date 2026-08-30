@@ -4,7 +4,17 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot, updateDoc, doc } from "firebase/firestore";
 import Link from "next/link";
-import { PackageCheck, CheckCircle } from "lucide-react";
+import { PackageCheck, CheckCircle, ShoppingBag } from "lucide-react";
+
+interface OrderItem {
+  id?: string;
+  name?: string;
+  title?: string;
+  price?: number;
+  quantity?: number;
+  image?: string;
+  game?: string;
+}
 
 interface Order {
   id: string;
@@ -17,7 +27,7 @@ interface Order {
   total: number;
   status: string;
   createdAt: any;
-  items: any[];
+  items: OrderItem[];
 }
 
 export default function AdminOrdersPage() {
@@ -25,14 +35,12 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Lắng nghe dữ liệu đơn hàng realtime từ Firebase
     const unsubscribe = onSnapshot(collection(db, "orders"), (snapshot) => {
       const list: Order[] = snapshot.docs.map((d) => ({
         id: d.id,
         ...d.data(),
       })) as Order[];
 
-      // Tự động sắp xếp đơn mới tạo lên trên cùng
       list.sort((a, b) => {
         const timeA = a.createdAt?.seconds || 0;
         const timeB = b.createdAt?.seconds || 0;
@@ -119,6 +127,40 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
 
+              {/* VẬT PHẨM CẦN GIAO */}
+              <div className="bg-blue-50/70 p-4 rounded-xl border border-blue-100 space-y-2">
+                <span className="text-xs font-bold text-blue-800 uppercase tracking-wider flex items-center gap-1.5">
+                  <ShoppingBag className="w-4 h-4 text-blue-600" /> Vật phẩm đã mua ({order.items?.length || 0})
+                </span>
+                <div className="divide-y divide-blue-100">
+                  {order.items && order.items.length > 0 ? (
+                    order.items.map((item, idx) => (
+                      <div key={idx} className="flex items-center justify-between py-2 text-sm">
+                        <div className="flex items-center gap-3">
+                          {item.image && (
+                            <img
+                              src={item.image}
+                              alt={item.name || item.title || "Sp"}
+                              className="w-10 h-10 object-cover rounded-lg border border-slate-200"
+                            />
+                          )}
+                          <div>
+                            <p className="font-bold text-slate-900">{item.name || item.title || "Vật phẩm Roblox"}</p>
+                            {item.game && <span className="text-[10px] text-blue-600 bg-white px-2 py-0.5 rounded border border-blue-200 font-semibold">{item.game}</span>}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-bold text-slate-800">x{item.quantity || 1}</span>
+                          <p className="text-xs text-slate-500">{(item.price || 0).toLocaleString("vi-VN")}đ</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-slate-500 italic py-1">Không tìm thấy danh sách sản phẩm chi tiết.</p>
+                  )}
+                </div>
+              </div>
+
               {/* THÔNG TIN KHÁCH HÀNG ROBLOX */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100 text-sm">
                 <div>
@@ -131,7 +173,7 @@ export default function AdminOrdersPage() {
                 </div>
                 {order.customer?.note && (
                   <div className="md:col-span-2 border-t pt-2 border-slate-200">
-                    <span className="text-slate-400 text-xs block">Ghi chú:</span>
+                    <span className="text-slate-400 text-xs block">Ghi chú từ khách:</span>
                     <p className="text-slate-700 font-medium">{order.customer.note}</p>
                   </div>
                 )}
