@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ArrowLeft, Save, Upload, Image as ImageIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -25,7 +24,6 @@ export default function NewProductPage() {
     image: "/logo.png",
   });
 
-// Hàm xử lý khi chọn file ảnh từ máy tính / điện thoại (Dùng ImgBB)
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -53,7 +51,6 @@ export default function NewProductPage() {
     } finally {
       setUploadingImage(false);
     }
-
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -91,7 +88,6 @@ export default function NewProductPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
-        {/* Khung tải ảnh */}
         <div className="space-y-2">
           <label className="text-xs font-bold text-slate-600 block">Hình ảnh sản phẩm</label>
           <div className="flex items-center gap-4">
