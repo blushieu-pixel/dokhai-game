@@ -2,10 +2,19 @@
 
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { CreditCard, QrCode, Smartphone, CheckCircle, AlertCircle } from "lucide-react";
+import {
+  CreditCard,
+  QrCode,
+  Smartphone,
+  CheckCircle,
+  AlertCircle,
+  Copy,
+  Check,
+  ShieldCheck,
+} from "lucide-react";
 
 export default function TopupPage() {
-  const { user, userData, loginWithGoogle } = useAuth();
+  const { user, loginWithGoogle } = useAuth();
   const [method, setMethod] = useState<"card" | "qr">("card");
 
   // State nạp thẻ cào
@@ -14,7 +23,19 @@ export default function TopupPage() {
   const [serial, setSerial] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
+
+  // State sao chép
+  const [copiedText, setCopiedText] = useState<string | null>(null);
+
+  const handleCopy = (text: string, type: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedText(type);
+    setTimeout(() => setCopiedText(null), 2000);
+  };
 
   async function handleCardSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -82,6 +103,9 @@ export default function TopupPage() {
       </main>
     );
   }
+
+  const transferMemo = `NAP ${user.uid.slice(0, 6).toUpperCase()}`;
+  const accountNumber = "199918092007";
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 py-10">
@@ -160,7 +184,7 @@ export default function TopupPage() {
                 <select
                   value={declaredAmount}
                   onChange={(e) => setDeclaredAmount(Number(e.target.value))}
-                  className="w-full border border-slate-200 rounded-2xl px-4 py-3 bg-white font-semibold text-slate-800"
+                  className="w-full border border-slate-200 rounded-2xl px-4 py-3 bg-white font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value={10000}>10.000đ</option>
                   <option value={20000}>20.000đ</option>
@@ -178,7 +202,7 @@ export default function TopupPage() {
                   value={serial}
                   onChange={(e) => setSerial(e.target.value)}
                   placeholder="Nhập dãy số Seri"
-                  className="w-full border border-slate-200 rounded-2xl px-4 py-3 font-mono text-sm text-slate-900"
+                  className="w-full border border-slate-200 rounded-2xl px-4 py-3 font-mono text-sm text-slate-900 outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -189,7 +213,7 @@ export default function TopupPage() {
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   placeholder="Nhập mã thẻ sau lớp tráng bạc"
-                  className="w-full border border-slate-200 rounded-2xl px-4 py-3 font-mono text-sm text-slate-900"
+                  className="w-full border border-slate-200 rounded-2xl px-4 py-3 font-mono text-sm text-slate-900 outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -204,22 +228,67 @@ export default function TopupPage() {
           </div>
         )}
 
-        {/* TAB 2: CHUYỂN KHOAN QR */}
+        {/* TAB 2: CHUYỂN KHOẢN QR */}
         {method === "qr" && (
-          <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 text-center space-y-4">
+          <div className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 text-center space-y-6">
             <h2 className="text-xl font-bold border-b border-slate-100 pb-4 text-slate-900">
-              Quét Mã VietQR Ngân Hàng
+              Quét Mã VietQR Ngân Hàng MB Bank
             </h2>
-            <div className="bg-slate-100 p-4 rounded-2xl inline-block">
+
+            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 inline-block">
               <img
-  src={`https://img.vietqr.io/image/MB-199918092007-compact2.png?accountName=DO%20DINH%20KHAI&addInfo=NAP%20${user.uid.slice(0, 6)}`}
-  alt="VietQR DoKhai"
-  className="w-64 h-64 object-contain mx-auto rounded-xl"
-/>
+                src={`https://img.vietqr.io/image/MB-199918092007-compact2.png?accountName=DO%20DINH%20KHAI&addInfo=${encodeURIComponent(
+                  transferMemo
+                )}`}
+                alt="VietQR DoKhai"
+                className="w-64 h-64 object-contain mx-auto rounded-xl shadow-sm"
+              />
             </div>
-            <p className="text-sm text-slate-600">
-              Nội dung chuyển khoản: <strong className="text-blue-600">NAP {user.uid.slice(0, 6)}</strong>
-            </p>
+
+            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-left space-y-3 text-xs">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500">Ngân hàng:</span>
+                <strong className="text-slate-900 text-sm">MB Bank</strong>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500">Chủ tài khoản:</span>
+                <strong className="text-slate-900 text-sm">DO DINH KHAI</strong>
+              </div>
+
+              <div className="flex justify-between items-center pt-1 border-t border-slate-200">
+                <div>
+                  <span className="text-slate-500 block">Số tài khoản:</span>
+                  <strong className="text-blue-600 font-mono text-sm">{accountNumber}</strong>
+                </div>
+                <button
+                  onClick={() => handleCopy(accountNumber, "stk")}
+                  className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-xl transition flex items-center gap-1 text-xs font-bold"
+                >
+                  {copiedText === "stk" ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedText === "stk" ? "Đã chép" : "Sao chép"}
+                </button>
+              </div>
+
+              <div className="flex justify-between items-center pt-1 border-t border-slate-200">
+                <div>
+                  <span className="text-slate-500 block">Nội dung chuyển khoản:</span>
+                  <strong className="text-red-600 font-mono text-sm">{transferMemo}</strong>
+                </div>
+                <button
+                  onClick={() => handleCopy(transferMemo, "memo")}
+                  className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-xl transition flex items-center gap-1 text-xs font-bold"
+                >
+                  {copiedText === "memo" ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedText === "memo" ? "Đã chép" : "Sao chép"}
+                </button>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 p-3.5 rounded-2xl border border-blue-100 flex items-start gap-2.5 text-blue-900 text-xs text-left">
+              <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+              <p>Hệ thống tự động cộng tiền vào ví ngay khi nhận được chuyển khoản đúng nội dung.</p>
+            </div>
           </div>
         )}
       </div>
