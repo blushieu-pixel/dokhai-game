@@ -43,7 +43,6 @@ export default function WalletPage() {
           ...d.data(),
         })) as Order[];
 
-        // Sắp xếp đơn mới nhất nằm trên cùng
         list.sort((a, b) => {
           const timeA = a.createdAt?.seconds || 0;
           const timeB = b.createdAt?.seconds || 0;
@@ -83,10 +82,10 @@ export default function WalletPage() {
             </span>
           </div>
 
-          {/* NÚT NẠP TIỀN DỰDỌC KHỞI TẠO LẠI */}
+          {/* NÚT NẠP TIỀN ĐÃ CẬP NHẬT ĐƯỜNG DẪN ĐÚNG */}
           <div>
             <Link
-              href="/topup"
+              href="/wallet/topup"
               className="inline-flex items-center gap-2 bg-white text-blue-600 hover:bg-slate-100 font-extrabold text-sm px-5 py-2.5 rounded-2xl shadow-md transition active:scale-95"
             >
               <PlusCircle className="w-4 h-4" /> Nạp tiền
