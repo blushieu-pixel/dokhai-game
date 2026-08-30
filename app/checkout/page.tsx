@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { collection, doc, runTransaction, serverTimestamp } from "firebase/firestore";
+import { db, auth } from "@/lib/firebase";
 import useCart from "@/hooks/useCart";
 import { getCoupon, Coupon } from "@/hooks/useCoupons";
 
@@ -66,9 +66,15 @@ export default function CheckoutPage() {
     setCouponCode("");
   }
 
-  // Tạo đơn hàng
+  // Tạo đơn hàng & Trừ tiền ví
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      alert("Vui lòng đăng nhập tài khoản để thanh toán!");
+      return;
+    }
 
     if (cart.length === 0) {
       alert("Giỏ hàng đang trống.");
@@ -78,27 +84,65 @@ export default function CheckoutPage() {
     setLoading(true);
 
     try {
-      const orderRef = await addDoc(collection(db, "orders"), {
-        customer: form,
-        items: cart,
-        subtotal: total,
-        discount: discount,
-        total: finalTotal,
-        coupon: coupon
-          ? {
-              id: coupon.id,
-              type: coupon.type,
-              value: coupon.value,
-            }
-          : null,
-        status: "pending",
-        createdAt: serverTimestamp(),
+      let createdOrderId = "";
+
+      // Thực hiện Transaction để trừ tiền ví an toàn
+      await runTransaction(db, async (transaction) => {
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnap = await transaction.get(userRef);
+
+        if (!userSnap.exists()) {
+          throw new Error("Không tìm thấy dữ liệu tài khoản của bạn!");
+        }
+
+        const userData = userSnap.data();
+        const currentBalance = userData.balance || 0;
+
+        // 1. Kiểm tra số dư ví
+        if (currentBalance < finalTotal) {
+          throw new Error(
+            `Số dư ví không đủ! Số dư hiện tại: ${currentBalance.toLocaleString("vi-VN")}đ. Cần thanh toán: ${finalTotal.toLocaleString("vi-VN")}đ.`
+          );
+        }
+
+        // 2. Trừ tiền tài khoản
+        transaction.update(userRef, {
+          balance: currentBalance - finalTotal,
+        });
+
+        // 3. Khởi tạo đơn hàng mới với trạng thái "paid"
+        const newOrderRef = doc(collection(db, "orders"));
+        createdOrderId = newOrderRef.id;
+
+        transaction.set(newOrderRef, {
+          userId: currentUser.uid,
+          customer: form,
+          items: cart,
+          subtotal: total,
+          discount: discount,
+          total: finalTotal,
+          coupon: coupon
+            ? {
+                id: coupon.id,
+                type: coupon.type,
+                value: coupon.value,
+              }
+            : null,
+          status: "paid",
+          createdAt: serverTimestamp(),
+        });
       });
 
-      router.push(`/orders/${orderRef.id}`);
-    } catch (err) {
+      // Xóa giỏ hàng sau khi mua thành công
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("cart");
+      }
+
+      alert("Thanh toán thành công! Tiền đã được trừ từ ví tài khoản.");
+      router.push(`/orders/${createdOrderId}`);
+    } catch (err: any) {
       console.error(err);
-      alert("Có lỗi khi tạo đơn.");
+      alert(err.message || "Có lỗi xảy ra khi tạo đơn.");
     } finally {
       setLoading(false);
     }
@@ -107,7 +151,6 @@ export default function CheckoutPage() {
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="max-w-3xl mx-auto px-4 py-10">
-
         <h1 className="text-4xl font-black mb-2">Thanh toán</h1>
         <p className="text-slate-500 mb-8">
           Điền thông tin để giao vật phẩm Roblox.
@@ -115,7 +158,6 @@ export default function CheckoutPage() {
 
         <div className="bg-white rounded-3xl shadow p-8">
           <form onSubmit={handleSubmit} className="space-y-5">
-
             {/* USERNAME */}
             <div>
               <label className="font-semibold block mb-2">Username Roblox</label>
@@ -123,7 +165,7 @@ export default function CheckoutPage() {
                 required
                 value={form.robloxName}
                 onChange={(e) => setForm({ ...form, robloxName: e.target.value })}
-                className="w-full border rounded-2xl px-4 py-3"
+                className="w-full border rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="DoKhai123"
               />
             </div>
@@ -135,7 +177,7 @@ export default function CheckoutPage() {
                 required
                 value={form.robloxUID}
                 onChange={(e) => setForm({ ...form, robloxUID: e.target.value })}
-                className="w-full border rounded-2xl px-4 py-3"
+                className="w-full border rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="123456789"
               />
             </div>
@@ -147,7 +189,7 @@ export default function CheckoutPage() {
                 rows={4}
                 value={form.note}
                 onChange={(e) => setForm({ ...form, note: e.target.value })}
-                className="w-full border rounded-2xl px-4 py-3 resize-none"
+                className="w-full border rounded-2xl px-4 py-3 resize-none outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Ví dụ: Giao trong Grow a Garden..."
               />
             </div>
@@ -161,14 +203,13 @@ export default function CheckoutPage() {
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   onKeyDown={(e) => {
-                    // Ngăn chặn Enter gửi Form, đổi thành kích hoạt kiểm tra mã
                     if (e.key === "Enter") {
                       e.preventDefault();
                       handleApplyCoupon();
                     }
                   }}
                   placeholder="Nhập mã giảm giá"
-                  className="flex-1 border rounded-xl px-4 py-3 uppercase"
+                  className="flex-1 border rounded-xl px-4 py-3 uppercase outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
                 <button
@@ -181,7 +222,6 @@ export default function CheckoutPage() {
                 </button>
               </div>
 
-              {/* Thông báo & nút hủy mã đã áp dụng */}
               {coupon && (
                 <div className="flex items-center justify-between text-sm mt-3 bg-green-50 p-3 rounded-xl border border-green-200">
                   <span className="text-green-700 font-medium">
@@ -228,9 +268,8 @@ export default function CheckoutPage() {
               disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold transition disabled:opacity-60"
             >
-              {loading ? "Đang tạo đơn..." : "Tạo đơn hàng"}
+              {loading ? "Đang xử lý giao dịch..." : "Thanh toán bằng số dư ví"}
             </button>
-
           </form>
         </div>
       </div>
