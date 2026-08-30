@@ -96,7 +96,8 @@ export default function CheckoutPage() {
         }
 
         const userData = userSnap.data();
-        const currentBalance = userData.balance || 0;
+        // Nhận diện số dư tiền trong trường 'wallet'
+        const currentBalance = Number(userData.wallet ?? userData.balance ?? 0);
 
         // 1. Kiểm tra số dư ví
         if (currentBalance < finalTotal) {
@@ -105,9 +106,9 @@ export default function CheckoutPage() {
           );
         }
 
-        // 2. Trừ tiền tài khoản
+        // 2. Trừ tiền tài khoản trong trường 'wallet'
         transaction.update(userRef, {
-          balance: currentBalance - finalTotal,
+          wallet: currentBalance - finalTotal,
         });
 
         // 3. Khởi tạo đơn hàng mới với trạng thái "paid"
