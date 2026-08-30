@@ -5,7 +5,7 @@ import { db, auth } from "@/lib/firebase";
 import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
-import { Wallet as WalletIcon, ShoppingBag, ArrowUpRight } from "lucide-react";
+import { Wallet as WalletIcon, ShoppingBag, ArrowUpRight, PlusCircle } from "lucide-react";
 
 interface Order {
   id: string;
@@ -66,8 +66,8 @@ export default function WalletPage() {
   return (
     <main className="min-h-screen bg-slate-50 py-10">
       <div className="max-w-3xl mx-auto px-4 space-y-6">
-        {/* SỐ DƯ VÍ */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden">
+        {/* SỐ DƯ VÍ KHÁCH HÀNG */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden space-y-6">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
               <div className="flex items-center gap-2 text-blue-100 text-sm font-semibold">
@@ -81,6 +81,16 @@ export default function WalletPage() {
             <span className="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">
               Thành viên
             </span>
+          </div>
+
+          {/* NÚT NẠP TIỀN DỰDỌC KHỞI TẠO LẠI */}
+          <div>
+            <Link
+              href="/topup"
+              className="inline-flex items-center gap-2 bg-white text-blue-600 hover:bg-slate-100 font-extrabold text-sm px-5 py-2.5 rounded-2xl shadow-md transition active:scale-95"
+            >
+              <PlusCircle className="w-4 h-4" /> Nạp tiền
+            </Link>
           </div>
         </div>
 
