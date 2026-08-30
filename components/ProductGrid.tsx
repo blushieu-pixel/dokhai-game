@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
-import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 
@@ -23,7 +22,6 @@ export default function ProductGrid({ selectedGame }: { selectedGame?: string })
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Lắng nghe dữ liệu sản phẩm mới nhất từ Firebase Firestore
     const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const list: Product[] = snapshot.docs.map((doc) => ({
@@ -65,17 +63,16 @@ export default function ProductGrid({ selectedGame }: { selectedGame?: string })
           key={product.id}
           className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col"
         >
-          <div className="relative w-full h-40 bg-slate-100">
+          <div className="relative w-full h-40 bg-slate-100 overflow-hidden">
             {product.tag && (
               <span className="absolute top-2 left-2 z-10 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">
                 {product.tag}
               </span>
             )}
-            <Image
+            <img
               src={product.image || "/logo.png"}
               alt={product.name}
-              fill
-              className="object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
 

@@ -6,7 +6,6 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ArrowLeft, Save, Upload, Image as ImageIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -93,7 +92,11 @@ export default function NewProductPage() {
           <div className="flex items-center gap-4">
             <div className="relative w-24 h-24 rounded-2xl bg-slate-100 border-2 border-dashed border-slate-300 overflow-hidden flex items-center justify-center flex-shrink-0">
               {imagePreview || form.image !== "/logo.png" ? (
-                <Image src={imagePreview || form.image} alt="Preview" fill className="object-cover" />
+                <img 
+                  src={imagePreview || form.image} 
+                  alt="Preview" 
+                  className="w-full h-full object-cover" 
+                />
               ) : (
                 <ImageIcon className="w-8 h-8 text-slate-400" />
               )}
