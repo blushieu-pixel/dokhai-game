@@ -1,162 +1,110 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { useParams } from "next/navigation";
 import { db } from "@/lib/firebase";
-import Link from "next/link";
-import OrderTimeline from "@/components/OrderTimeline";
-interface Order {
-  customer: {
-    robloxName: string;
-    robloxUID: string;
-    note?: string;
-  };
-  total: number;
-  status: string;
-}
+import { doc, getDoc } from "firebase/firestore";
+import { Sparkles, Copy, Check, Key, ShieldCheck, ShoppingBag } from "lucide-react";
 
-export default function OrderDetail({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const [order, setOrder] = useState<Order | null>(null);
-  const [orderId, setOrderId] = useState("");
+export default function OrderDetailPage() {
+  const { id } = useParams();
+  const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   useEffect(() => {
-    async function load() {
-      const { id } = await params;
-setOrderId(id);
-      const snap = await getDoc(doc(db, "orders", id));
-
-      if (snap.exists()) {
-        setOrder(snap.data() as Order);
+    async function fetchOrder() {
+      if (!id) return;
+      const docSnap = await getDoc(doc(db, "orders", id as string));
+      if (docSnap.exists()) {
+        setOrder({ id: docSnap.id, ...docSnap.data() });
       }
-
       setLoading(false);
     }
+    fetchOrder();
+  }, [id]);
 
-    load();
-  }, [params]);
+  const handleCopy = (text: string, key: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
+  };
 
   if (loading) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        Đang tải đơn hàng...
-      </main>
-    );
+    return <div className="min-h-screen flex items-center justify-center font-bold text-slate-500">Đang nhận Acc Túi Mù...</div>;
   }
 
   if (!order) {
-    return (
-      <main className="min-h-screen flex items-center justify-center">
-        Không tìm thấy đơn.
-      </main>
-    );
+    return <div className="min-h-screen flex items-center justify-center font-bold text-red-500">Không tìm thấy đơn hàng!</div>;
   }
 
-  const statusColor =
-    order.status === "pending"
-      ? "bg-yellow-100 text-yellow-700"
-      : order.status === "paid"
-      ? "bg-blue-100 text-blue-700"
-      : "bg-green-100 text-green-700";
-
-  const statusText =
-    order.status === "pending"
-      ? "Chờ thanh toán"
-      : order.status === "paid"
-      ? "Đã thanh toán"
-      : "Đã giao";
-
   return (
-    <main className="min-h-screen bg-slate-50">
-      <div className="max-w-3xl mx-auto px-4 py-10">
-
-        <h1 className="text-4xl font-black">
-          Chi tiết đơn hàng
-        </h1>
-
-        <div className="bg-white rounded-3xl shadow p-8 mt-8">
-
-          <div className="flex justify-between items-center">
-
-            <div>
-
-              <p className="text-slate-500">
-                Mã đơn
-              </p>
-
-             <h2 className="font-black text-xl">
-  DKG-{orderId.slice(0, 6).toUpperCase()}
-</h2>
-
-            </div>
-
-            <span className={`px-4 py-2 rounded-full font-semibold ${statusColor}`}>
-              {statusText}
-            </span>
-<OrderTimeline status={order.status} />
+    <main className="min-h-screen bg-slate-50 py-10 px-4">
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* BANNER THÀNH CÔNG */}
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 text-white shadow-xl text-center space-y-2">
+          <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto">
+            <Sparkles className="w-6 h-6 text-yellow-300" />
           </div>
-
-          <div className="mt-8 space-y-5">
-
-            <div className="flex justify-between">
-
-              <span>Username Roblox</span>
-
-              <span className="font-bold">
-                {order.customer.robloxName}
-              </span>
-
-            </div>
-
-            <div className="flex justify-between">
-
-              <span>UID</span>
-
-              <span className="font-bold">
-                {order.customer.robloxUID}
-              </span>
-
-            </div>
-
-            <div className="flex justify-between">
-
-              <span>Tổng tiền</span>
-
-              <span className="font-black text-blue-600">
-                {order.total.toLocaleString("vi-VN")}đ
-              </span>
-
-            </div>
-
-          </div>
-
-          {order.customer.note && (
-            <div className="mt-8 bg-slate-100 rounded-2xl p-5">
-
-              <p className="text-sm text-slate-500">
-                Ghi chú
-              </p>
-
-              <p className="mt-2">
-                {order.customer.note}
-              </p>
-
-            </div>
-          )}
-
-          <Link
-            href="/"
-            className="block w-full mt-8 text-center bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-bold"
-          >
-            Về trang chủ
-          </Link>
-
+          <h1 className="text-2xl font-black">Mở Túi Mù Thành Công!</h1>
+          <p className="text-xs text-blue-100">Dưới đây là thông tin tài khoản Roblox của bạn</p>
         </div>
 
+        {/* THÔNG TIN TÀI KHOẢN ĐÃ MUA */}
+        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
+          <h2 className="font-extrabold text-slate-900 text-base flex items-center gap-2 border-b pb-3">
+            <Key className="w-5 h-5 text-blue-600" /> Tài Khoản Roblox Đã Nhận
+          </h2>
+
+          <div className="space-y-4">
+            {order.items?.map((item: any, idx: number) => (
+              <div key={idx} className="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                <span className="text-xs font-black text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
+                  {item.name}
+                </span>
+
+                {item.assignedAccounts?.map((acc: any, accIdx: number) => (
+                  <div key={accIdx} className="space-y-3 pt-2">
+                    {/* TÊN TÀI KHOẢN */}
+                    <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-bold block">TÀI KHOẢN</span>
+                        <strong className="text-slate-900 font-mono text-sm">{acc.username}</strong>
+                      </div>
+                      <button
+                        onClick={() => handleCopy(acc.username, `user_${idx}_${accIdx}`)}
+                        className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1"
+                      >
+                        {copiedKey === `user_${idx}_${accIdx}` ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedKey === `user_${idx}_${accIdx}` ? "Đã chép" : "Sao chép"}
+                      </button>
+                    </div>
+
+                    {/* MẬT KHẨU */}
+                    <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200">
+                      <div>
+                        <span className="text-[10px] text-slate-400 font-bold block">MẬT KHẨU</span>
+                        <strong className="text-red-600 font-mono text-sm">{acc.password}</strong>
+                      </div>
+                      <button
+                        onClick={() => handleCopy(acc.password, `pass_${idx}_${accIdx}`)}
+                        className="bg-slate-900 hover:bg-slate-800 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1"
+                      >
+                        {copiedKey === `pass_${idx}_${accIdx}` ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copiedKey === `pass_${idx}_${accIdx}` ? "Đã chép" : "Sao chép"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 flex items-start gap-2.5 text-blue-900 text-xs">
+            <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+            <p>Khuyên dùng: Đăng nhập vào Roblox và đổi ngay mật khẩu để bảo mật tài khoản cá nhân.</p>
+          </div>
+        </div>
       </div>
     </main>
   );
