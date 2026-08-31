@@ -74,6 +74,14 @@ export default function TopupPage() {
     setTimeout(() => setCopiedText(null), 2000);
   };
 
+  const handleSelectCardType = (type: string) => {
+    setCardType(type);
+    // Nếu đổi sang loại thẻ khác Garena mà đang chọn 5.000đ thì tự chuyển về 10.000đ
+    if (type !== "GARENA" && declaredAmount === 5000) {
+      setDeclaredAmount(10000);
+    }
+  };
+
   async function handleCardSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) {
@@ -224,7 +232,7 @@ export default function TopupPage() {
                     <button
                       key={type}
                       type="button"
-                      onClick={() => setCardType(type)}
+                      onClick={() => handleSelectCardType(type)}
                       className={`py-3 rounded-xl font-bold text-xs border transition ${
                         cardType === type
                           ? "border-blue-600 bg-blue-50 text-blue-600"
@@ -244,6 +252,7 @@ export default function TopupPage() {
                   onChange={(e) => setDeclaredAmount(Number(e.target.value))}
                   className="w-full border border-slate-200 rounded-2xl px-4 py-3 bg-white font-semibold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500"
                 >
+                  {cardType === "GARENA" && <option value={5000}>5.000đ</option>}
                   <option value={10000}>10.000đ</option>
                   <option value={20000}>20.000đ</option>
                   <option value={50000}>50.000đ</option>
