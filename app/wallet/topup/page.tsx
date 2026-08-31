@@ -24,7 +24,7 @@ export default function TopupPage() {
 
   // State nạp thẻ cào
   const [cardType, setCardType] = useState("VIETTEL");
-  const [declaredAmount, setDeclaredAmount] = useState(50000);
+  const [declaredAmount, setDeclaredAmount] = useState(10000);
   const [serial, setSerial] = useState("");
   const [code, setCode] = useState("");
   const [loadingCard, setLoadingCard] = useState(false);
@@ -76,8 +76,9 @@ export default function TopupPage() {
 
   const handleSelectCardType = (type: string) => {
     setCardType(type);
-    // Nếu đổi sang loại thẻ khác Garena mà đang chọn 5.000đ thì tự chuyển về 10.000đ
-    if (type !== "GARENA" && declaredAmount === 5000) {
+    if (type === "GARENA") {
+      setDeclaredAmount(5000);
+    } else if (declaredAmount === 5000) {
       setDeclaredAmount(10000);
     }
   };
@@ -107,7 +108,7 @@ export default function TopupPage() {
 
       const result = await res.json();
 
-      if (result.status === 99) {
+      if (result.status === 99 || result.status === 1) {
         setMessage({
           type: "success",
           text: "Gửi thẻ thành công! Hệ thống đang xử lý, tiền sẽ tự động cộng vào ví sau vài giây.",
@@ -117,7 +118,7 @@ export default function TopupPage() {
       } else {
         setMessage({
           type: "error",
-          text: result.message || "Mã thẻ hoặc seri không chính xác!",
+          text: result.message || result.error || "Mã thẻ hoặc seri không chính xác!",
         });
       }
     } catch (error) {

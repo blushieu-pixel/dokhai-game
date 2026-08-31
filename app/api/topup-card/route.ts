@@ -3,25 +3,27 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 
-const PARTNER_ID = "8832586655";
-const PARTNER_KEY = "72f315b7e96ac25badbb55e7b5772fbe";
-
 export async function POST(request: Request) {
   try {
     const { uid, cardType, declaredAmount, serial, code } = await request.json();
 
     if (!uid || !cardType || !declaredAmount || !serial || !code) {
-      return NextResponse.json(
-        { error: "Thiếu thông tin thẻ" },
-        { status: 400 }
-      );
+      return NextResponse.json({
+        status: 400,
+        message: "Thiếu thông tin thẻ, vui lòng kiểm tra lại!",
+      });
     }
 
-    const requestId = `${uid}_${Date.now()}`;
+    const partnerId = process.env.GACHTHEFAST_PARTNER_ID || "8832586655";
+    const partnerKey = process.env.GACHTHEFAST_PARTNER_KEY || "72f315b7e96ac25badbb55e7b5772fbe";
+
+    const cleanCode = code.toString().trim();
+    const cleanSerial = serial.toString().trim();
+    const requestId = `${uid.slice(0, 8)}_${Date.now()}`;
 
     const sign = crypto
       .createHash("md5")
-      .update(PARTNER_KEY + code + serial)
+      .update(partnerKey + cleanCode + cleanSerial)
       .digest("hex");
 
     const res = await fetch("https://gachthefast.com/chargingws/v2", {
@@ -29,23 +31,23 @@ export async function POST(request: Request) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         sign: sign,
-        telco: cardType,
-        code: code,
-        serial: serial,
+        telco: cardType.toString().toUpperCase(),
+        code: cleanCode,
+        serial: cleanSerial,
         amount: Number(declaredAmount),
         request_id: requestId,
-        partner_id: PARTNER_ID,
+        partner_id: partnerId,
         command: "charging",
       }),
     });
 
     const data = await res.json();
     return NextResponse.json(data);
-  } catch (error) {
-    console.error("Lỗi gửi thẻ:", error);
-    return NextResponse.json(
-      { error: "Không thể kết nối tới cổng gạch thẻ" },
-      { status: 500 }
-    );
+  } catch (error: any) {
+    console.error("Lỗi kết nối cổng Gachthefast:", error);
+    return NextResponse.json({
+      status: 500,
+      message: "Không thể kết nối tới cổng gạch thẻ!",
+    });
   }
 }
