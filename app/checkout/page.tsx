@@ -16,7 +16,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { ShoppingBag, Wallet, CheckCircle } from "lucide-react";
+import { ShoppingBag, Wallet, AlertCircle } from "lucide-react";
 
 export default function CheckoutPage() {
   const [user, setUser] = useState<any>(null);
@@ -67,8 +67,9 @@ export default function CheckoutPage() {
 
     try {
       const deliveredItems: any[] = [];
+      let isAutoDelivered = false;
 
-      // Xử lý bốc acc tự động cho từng sản phẩm
+      // Xử lý kiểm tra bốc acc từ kho
       for (const item of cart) {
         const q = query(
           collection(db, "stock_accounts"),
@@ -79,47 +80,50 @@ export default function CheckoutPage() {
 
         const stockSnap = await getDocs(q);
 
-        if (stockSnap.size < (item.quantity || 1)) {
-          alert(`Sản phẩm "${item.name}" hiện đã hết acc trong kho!`);
-          setLoading(false);
-          return;
-        }
+        if (stockSnap.size >= (item.quantity || 1)) {
+          // Trường hợp 1: Có sẵn acc trong kho -> Bốc acc tự động
+          const accountsAssigned: any[] = [];
+          for (const accountDoc of stockSnap.docs) {
+            const accData = accountDoc.data();
+            await updateDoc(doc(db, "stock_accounts", accountDoc.id), {
+              isSold: true,
+              soldToUserId: user.uid,
+              soldAt: serverTimestamp(),
+            });
 
-        const accountsAssigned: any[] = [];
-        for (const accountDoc of stockSnap.docs) {
-          const accData = accountDoc.data();
-          // Đánh dấu acc đã bán
-          await updateDoc(doc(db, "stock_accounts", accountDoc.id), {
-            isSold: true,
-            soldToUserId: user.uid,
-            soldAt: serverTimestamp(),
+            accountsAssigned.push({
+              username: accData.username,
+              password: accData.password,
+            });
+          }
+
+          deliveredItems.push({
+            ...item,
+            assignedAccounts: accountsAssigned,
           });
-
-          accountsAssigned.push({
-            username: accData.username,
-            password: accData.password,
+          isAutoDelivered = true;
+        } else {
+          // Trường hợp 2: Kho hết acc -> Chuyển thành đơn hàng thường để Admin giao thủ công
+          deliveredItems.push({
+            ...item,
+            assignedAccounts: [],
           });
         }
-
-        deliveredItems.push({
-          ...item,
-          assignedAccounts: accountsAssigned,
-        });
       }
 
       // 1. Trừ tiền ví
       const newBalance = balance - totalAmount;
       await updateDoc(doc(db, "users", user.uid), { wallet: newBalance });
 
-      // 2. Tạo đơn hàng với tài khoản đã được cấp
+      // 2. Tạo đơn hàng (Trạng thái completed nếu có acc tự động, paid nếu chờ Admin giao)
       const orderRef = await addDoc(collection(db, "orders"), {
         userId: user.uid,
         customer: {
-          robloxName: robloxName || user.displayName || "Khách mua Túi mù",
+          robloxName: robloxName || user.displayName || "Khách mua hàng",
         },
         items: deliveredItems,
         total: totalAmount,
-        status: "completed",
+        status: isAutoDelivered ? "completed" : "paid",
         createdAt: serverTimestamp(),
       });
 
@@ -127,7 +131,7 @@ export default function CheckoutPage() {
       localStorage.removeItem("cart");
       window.dispatchEvent(new Event("storage"));
 
-      // 4. Chuyển hướng tới trang nhận Acc
+      // 4. Chuyển sang trang chi tiết đơn hàng
       router.push(`/orders/${orderRef.id}`);
     } catch (err) {
       console.error(err);
@@ -141,7 +145,7 @@ export default function CheckoutPage() {
     <main className="min-h-screen bg-slate-50 py-10 px-4">
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-          <ShoppingBag className="w-6 h-6 text-blue-600" /> Xác Nhận Mua Túi Mù
+          <ShoppingBag className="w-6 h-6 text-blue-600" /> Xác Nhận Mua Hàng
         </h1>
 
         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-3">
@@ -157,7 +161,7 @@ export default function CheckoutPage() {
 
         <div>
           <label className="block text-xs font-bold text-slate-700 mb-1">
-            Username Roblox của bạn (Không bắt buộc)
+            Username Roblox của bạn (Nhập tên nick game để Admin hỗ trợ giao)
           </label>
           <input
             type="text"
@@ -174,7 +178,7 @@ export default function CheckoutPage() {
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl transition shadow-lg shadow-blue-500/20 active:scale-95 flex items-center justify-center gap-2 text-base disabled:opacity-60"
         >
           <Wallet className="w-5 h-5" />
-          {loading ? "Đang mở Túi mù..." : "Thanh Toán Bằng Số Dư Ví"}
+          {loading ? "Đang xử lý thanh toán..." : "Thanh Toán Bằng Số Dư Ví"}
         </button>
       </div>
     </main>
