@@ -10,37 +10,41 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-// Tắt cache cho route này
 export const dynamic = "force-dynamic";
 
 async function handleCallback(req: Request) {
   try {
     const url = new URL(req.url);
-    
-    // Lấy tham số từ Query String (GET) hoặc Body (POST)
+
+    // Lấy dữ liệu từ Query String (GET) hoặc Body (POST)
     let status = url.searchParams.get("status");
     let requestId = url.searchParams.get("request_id");
-    let amount = url.searchParams.get("value") || url.searchParams.get("amount");
+
+    // ƯU TIÊN LẤY SỐ TIỀN THỰC NHẬN SAU CHIẾT KHẤU (receive_amount hoặc amount)
+    let receiveAmount =
+      url.searchParams.get("receive_amount") ||
+      url.searchParams.get("amount") ||
+      url.searchParams.get("value");
 
     if (!status || !requestId) {
       try {
         const body = await req.json();
         status = body.status;
         requestId = body.request_id;
-        amount = body.value || body.amount;
+        receiveAmount = body.receive_amount || body.amount || body.value;
       } catch (e) {
         // Bỏ qua nếu không có body JSON
       }
     }
 
-    // Gachthefast trả về status = 1 (hoặc "1") là thẻ chuẩn thành công
-    if (String(status) === "1" && requestId) {
-      // requestId có dạng: UID_TIMESTAMP (Ví dụ: abcxyz12_1700000000)
+    // Gachthefast trả về status = 1 (Thẻ đúng) hoặc status = 2 (Thẻ sai mệnh giá nhưng vẫn xử lý trừ phạt)
+    const statusNum = String(status);
+    if ((statusNum === "1" || statusNum === "2") && requestId) {
       const uidPrefix = requestId.split("_")[0];
-      const realAmount = Number(amount || 0);
+      const realAmountToCredit = Number(receiveAmount || 0);
 
-      if (uidPrefix && realAmount > 0) {
-        // Tìm user tương ứng trong Firebase
+      if (uidPrefix && realAmountToCredit > 0) {
+        // Tìm tài khoản khách hàng tương ứng trong Firebase
         const usersSnap = await getDocs(collection(db, "users"));
         let targetUser: any = null;
 
@@ -53,17 +57,17 @@ async function handleCallback(req: Request) {
         });
 
         if (targetUser) {
-          // 1. Cộng tiền vào số dư ví của khách trên Firebase
+          // 1. Chỉ cộng ĐÚNG SỐ TIỀN THỰC NHẬN (Đã trừ chiết khấu) vào ví khách
           const userRef = doc(db, "users", targetUser.id);
           await updateDoc(userRef, {
-            wallet: increment(realAmount),
-            balance: increment(realAmount),
+            wallet: increment(realAmountToCredit),
+            balance: increment(realAmountToCredit),
           });
 
-          // 2. Ghi lịch sử nạp thẻ
+          // 2. Lưu lịch sử nạp thẻ
           await addDoc(collection(db, "topup_history"), {
             userId: targetUser.id,
-            amount: realAmount,
+            amount: realAmountToCredit,
             type: "card",
             status: "success",
             requestId: requestId,
@@ -73,7 +77,7 @@ async function handleCallback(req: Request) {
       }
     }
 
-    return NextResponse.json({ status: "OK", message: "Callback processed" });
+    return NextResponse.json({ status: "OK", message: "Callback processed successfully" });
   } catch (error: any) {
     console.error("Lỗi Callback Gachthefast:", error);
     return NextResponse.json({ status: "ERROR", error: error.message }, { status: 500 });
